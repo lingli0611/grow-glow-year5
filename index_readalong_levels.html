@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Grow & Glow — Read Along (Levels Upgrade)</title>
+<style>
+  :root{
+    --turquoise:#00C6C3; --lime:#D4ED4E; --pink:#FF6FB5; --yellow:#FFE066;
+    --ink:#17232c; --bg:#f7fffb; --card:#ffffff; --muted:#5a6a75;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:linear-gradient(120deg,var(--turquoise) 0%,#8ef5f1 40%,#fff 100%);font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+  .wrap{max-width:1100px;margin:0 auto;padding:18px 18px 60px}
+  h1{font-size:26px;margin:8px 0}
+  .muted{color:var(--muted)}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}
+  .tab{padding:8px 12px;border-radius:999px;border:1px solid #dbeeee;background:#fff;color:#074;cursor:pointer}
+  .tab.active{background:var(--lime);color:#1b3500;border-color:transparent}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+  .card{background:var(--card);border-radius:20px;padding:16px;box-shadow:0 6px 22px rgba(0,0,0,.08);border:1px solid #eaf4f4;display:flex;flex-direction:column;gap:10px}
+  .row{display:flex;gap:10px;align-items:center}
+  .gfx{width:64px;height:64px;border-radius:14px;background:#f0fffb;border:1px solid #d8efee;display:grid;place-items:center;font-size:34px}
+  .btn{cursor:pointer;border:none;background:var(--lime);color:#1b3500;padding:9px 12px;border-radius:12px;font-weight:700;box-shadow:0 6px 20px rgba(0,198,195,.25)}
+  .btn-light{background:#fff;border:1px solid #def3f3;color:#064}
+  .small{font-size:12px}
+  .pill{display:inline-block;background:#eef9f9;border:1px solid #dbeeee;border-radius:999px;padding:4px 10px;font-size:12px;margin-right:6px}
+  .table{width:100%;border-collapse:collapse}
+  .table td{padding:6px}
+  .mcq label{display:inline-block;margin:4px 8px 0 0}
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:5}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div class="wrap">
+  <h1>Read Along Zone 📖</h1>
+  <div class="muted">Choose your level (Low A1 / Mid A1 / High A1). Click <b>Play Audio</b> to listen, then answer the questions. Practice reading aloud!</div>
+
+  <div class="tabs" id="levelTabs"></div>
+  <div class="tabs" id="topicTabs"></div>
+  <div id="cards" class="cards"></div>
+
+  <div style="margin-top:14px">
+    <a class="btn-light" href="https://readalong.google/" target="_blank">🔗 Try Google Read Along (opens new tab)</a>
+  </div>
+</div>
+
+<script>
+const topics = ["Animals","Celebrations","Food & Health","Sports","Describing People","Camping"];
+const icons  = ["🐾","🎉","🍎","⚽","🧍","🏕️"];
+
+const data = {
+  "Low A1":[
+    {t:"Animals", text:"The tiger is a big cat. It has orange fur with black stripes. It is strong and fast.", q:[["Where does the tiger live?","In the jungle","In the sea","In the city",0],["What colour is its fur?","Blue","Orange","White",1]]},
+    {t:"Celebrations", text:"My family visits grandma during Hari Raya. We wear new clothes and eat sweet cookies.", q:[["Who do we visit?","Grandma","Teacher","Friend",0],["What do we wear?","New clothes","School uniform","Pajamas",0]]},
+    {t:"Food & Health", text:"I drink water and eat fruits every day. Apples help me stay strong and healthy.", q:[["What do I drink?","Juice","Water","Tea",1],["Fruits help me stay...","angry","strong","sleepy",1]]},
+    {t:"Sports", text:"I like football. I run on the field with my friends. We cheer for our team.", q:[["What sport do I like?","Badminton","Football","Hockey",1],["Where do we run?","On the field","In the hall","In the library",0]]},
+    {t:"Describing People", text:"My friend Sara has long black hair. She is kind and funny. She helps me in class.", q:[["What colour is Sara's hair?","Brown","Black","Red",1],["Sara is...","kind","angry","lazy",0]]},
+    {t:"Camping", text:"We put up a tent near the lake. At night, we sit by the fire and tell stories.", q:[["Where is the tent?","Near the lake","At school","On the bus",0],["What do we do at night?","Tell stories","Swim","Do homework",0]]}
+  ],
+  "Mid A1":[
+    {t:"Animals", text:"A pet needs care. I feed my cat in the morning. I play with her after school and keep her clean.", q:[["When do I feed my cat?","Morning","Night","Never",0],["What do I do after school?","Play with her","Ignore her","Sell toys",0]]},
+    {t:"Celebrations", text:"First, we clean the house. Then we cook special food. Next, we visit family. Finally, we take photos together.", q:[["What do we do first?","Cook","Clean the house","Take photos",1],["When do we visit family?","First","Next","Finally",1]]},
+    {t:"Food & Health", text:"To stay healthy, I eat vegetables, drink water, and sleep early. I also exercise three times a week.", q:[["What do I drink?","Soda","Water","Coffee",1],["How often do I exercise?","Once","Three times","Never",1]]},
+    {t:"Sports", text:"Last Friday we had Sports Day. I ran in a 100m race and my class cheered loudly. I felt proud.", q:[["When was Sports Day?","Last Friday","Tomorrow","Monday",0],["How did I feel?","Sad","Proud","Angry",1]]},
+    {t:"Describing People", text:"My teacher wears glasses and speaks clearly. Her lessons are fun and helpful for us.", q:[["What does my teacher wear?","A hat","Glasses","A scarf",1],["Her lessons are...","boring","fun","late",1]]},
+    {t:"Camping", text:"First, we arrive at the campsite. Then we set up the tent. Next, we cook noodles. Finally, we sing songs.", q:[["What do we do after arriving?","Go home","Set up the tent","Play games",1],["What do we cook?","Rice","Noodles","Cake",1]]}
+  ],
+  "High A1":[
+    {t:"Animals", text:"One day, I walked quietly in the jungle. Suddenly, a monkey jumped onto a tree and dropped a mango! I laughed and picked it up.", q:[["Where was I walking?","In the jungle","In a mall","By the road",0],["What fell from the tree?","A coconut","A mango","A kite",1]]},
+    {t:"Celebrations", text:"I love Chinese New Year because my family meets and shares stories. We decorate the house with red lanterns and eat together.", q:[["Why do I love the festival?","We meet and share stories","We go to school","We sleep early",0],["What colour are the lanterns?","Blue","Red","Green",1]]},
+    {t:"Food & Health", text:"In my opinion, drinking water is the best habit. It gives me energy and keeps my body fresh during class and sports.", q:[["What gives me energy?","Water","Candy","Coffee",0],["When does water help me?","During class and sports","Only at night","Never",0]]},
+    {t:"Sports", text:"My hero is a runner from our school. He trains every morning. He is brave and works hard, so I want to be like him.", q:[["When does he train?","Every morning","Every year","Never",0],["Why do I admire him?","He works hard","He sleeps late","He is noisy",0]]},
+    {t:"Describing People", text:"My sister has short hair and bright eyes. She is friendly and always shares snacks with me after school.", q:[["What kind of eyes does she have?","Bright","Sleepy","Red",0],["What does she share?","Books","Snacks","Shoes",1]]},
+    {t:"Camping", text:"Dear Diary, tonight the wind is cool. Our tent is warm and we can hear frogs near the lake. I feel happy and safe.", q:[["How is the wind?","Hot","Cool","Dirty",1],["What do we hear near the lake?","Cars","Frogs","Birds only",1]]}
+  ]
+};
+
+const levelTabs = document.getElementById('levelTabs');
+const topicTabs = document.getElementById('topicTabs');
+const cards = document.getElementById('cards');
+
+let currentLevel = "Low A1";
+let currentTopic = "Animals";
+
+["Low A1","Mid A1","High A1"].forEach((lv,i)=>{
+  const b=document.createElement('button'); b.className='tab'+(i===0?' active':''); b.textContent=lv;
+  b.onclick=()=>{ currentLevel=lv; updateTabs(); renderCards(); };
+  levelTabs.appendChild(b);
+});
+topics.forEach((t,i)=>{
+  const b=document.createElement('button'); b.className='tab'+(i===0?' active':''); b.textContent=icons[i]+' '+t;
+  b.onclick=()=>{ currentTopic=t; updateTabs(); renderCards(); };
+  topicTabs.appendChild(b);
+});
+
+function updateTabs(){
+  [...levelTabs.children].forEach(ch=>ch.classList.toggle('active', ch.textContent===currentLevel));
+  [...topicTabs.children].forEach((ch,idx)=>ch.classList.toggle('active', topics[idx]===currentTopic));
+}
+
+function renderCards(){
+  cards.innerHTML='';
+  const list = data[currentLevel].filter(x=>x.t===currentTopic);
+  list.forEach(obj=>{
+    const c = document.createElement('div'); c.className='card';
+    const icon = icons[topics.indexOf(obj.t)]||"📚";
+    c.innerHTML = `
+      <div class="row">
+        <div class="gfx">${icon}</div>
+        <div>
+          <div class="pill">${currentLevel}</div>
+          <h3 style="margin:2px 0">${obj.t}</h3>
+        </div>
+      </div>
+      <p>${obj.text}</p>
+      <div class="row" style="gap:8px;flex-wrap:wrap">
+        <button class="btn" onclick="tts('${obj.text.replace(/'/g,"\\'")}')">🔊 Play Audio</button>
+        <button class="btn btn-light" onclick="confettiBurst()">I read it!</button>
+      </div>
+      <div class="small">Quick Check:</div>
+      <div class="mcq small">
+        ${obj.q.map((qq,qi)=>`
+          <div style="margin-top:6px">
+            <div>${qi+1}. ${qq[0]}</div>
+            ${qq.slice(1,4).map((opt,oi)=>`
+              <label><input type="radio" name="q_${currentLevel}_${obj.t}_${qi}" onchange="check('${currentLevel}','${obj.t}',${qi},${oi})"> ${opt}</label>
+            `).join('')}
+            <span id="fb_${currentLevel}_${obj.t}_${qi}"></span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    cards.appendChild(c);
+  });
+}
+
+function check(level,topic,qi,oi){
+  const obj = data[level].find(x=>x.t===topic);
+  const correct = obj.q[qi][4];
+  const fb = document.getElementById(`fb_${level}_${topic}_${qi}`);
+  if(oi===correct){ fb.textContent=' ✅ Correct!'; fb.style.color='#0a6'; confettiBurst(40); }
+  else { fb.textContent=' ❌ Try again'; fb.style.color='#b30'; }
+}
+
+function tts(text){
+  if(!('speechSynthesis' in window)){ alert('Text-to-speech not supported on this device.'); return; }
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=1; u.pitch=1; speechSynthesis.cancel(); speechSynthesis.speak(u);
+}
+
+renderCards();
+
+/* Confetti */
+const canvas = document.getElementById('confetti'), ctx = canvas.getContext('2d');
+let parts=[], raf=null; function size(){ canvas.width=innerWidth; canvas.height=innerHeight; } window.addEventListener('resize',size); size();
+function confettiBurst(n=80){
+  const cols=['#00C6C3','#D4ED4E','#FF6FB5','#FFE066'];
+  for(let i=0;i<n;i++){ parts.push({x:Math.random()*canvas.width,y:-10,s:Math.random()*6+4,a:Math.random()*Math.PI*2,v:Math.random()*2+2,r:(Math.random()-0.5)*0.2,c:cols[Math.floor(Math.random()*cols.length)]}); }
+  if(!raf) loop();
+}
+function loop(){ raf=requestAnimationFrame(loop); ctx.clearRect(0,0,canvas.width,canvas.height);
+  parts.forEach(p=>{ p.y+=p.v; p.a+=p.r; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.a); ctx.fillStyle=p.c; ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s); ctx.restore(); });
+  parts=parts.filter(p=>p.y<canvas.height+20); if(parts.length===0){ cancelAnimationFrame(raf); raf=null; }
+}
+</script>
+</body>
+</html>
