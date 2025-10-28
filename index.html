@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Grow & Glow English Adventure — Year 5 (Malaysia, CEFR A1)</title>
+<style>
+  :root{
+    --turquoise:#00C6C3; --lime:#D4ED4E; --pink:#FF6FB5; --yellow:#FFE066;
+    --ink:#17232c; --bg:#f9fffb; --card:#ffffff; --muted:#5a6a75;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:linear-gradient(135deg,var(--turquoise)10%,#6ef3f1 40%,#fff 100%);font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,"Noto Sans","Apple Color Emoji","Segoe UI Emoji";color:var(--ink)}
+  .wrap{max-width:1100px;margin:0 auto;padding:16px 20px 80px}
+  header{position:sticky;top:0;z-index:9;background:rgba(255,255,255,.6);backdrop-filter:blur(8px);border-bottom:1px solid #e8f0f0}
+  .top{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 0}
+  .brand{display:flex;gap:10px;align-items:center}
+  .logo{width:40px;height:40px;border-radius:12px;background:conic-gradient(from 40deg,var(--turquoise),var(--lime),var(--pink),var(--yellow),var(--turquoise));box-shadow:0 4px 14px rgba(0,0,0,.15)}
+  .brand h1{font-size:18px;margin:0}
+  nav{display:flex;flex-wrap:wrap;gap:8px}
+  button, .btn{cursor:pointer;border:none;background:var(--turquoise);color:#052; padding:10px 14px;border-radius:14px;font-weight:700;box-shadow:0 6px 20px rgba(0,198,195,.25);transition:transform .06s}
+  .btn-light{background:#fff;color:var(--ink);border:1px solid #dfeff0}
+  .btn-pink{background:var(--pink);color:#4d0630}
+  .btn-yellow{background:var(--yellow);color:#614e00}
+  .btn-lime{background:var(--lime);color:#314800}
+  button:active{transform:translateY(1px)}
+  .section{display:none}
+  .section.active{display:block}
+  .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;padding:18px;margin:18px 0;border-radius:24px;background:linear-gradient(145deg,#fff 0%, #f1fffb 100%);box-shadow:0 12px 30px rgba(0,0,0,.12)}
+  .hero h2{margin:.2rem 0 0;font-size:28px}
+  .hero p{margin:.2rem 0;color:var(--muted)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+  .card{background:var(--card);border-radius:20px;padding:16px;box-shadow:0 6px 22px rgba(0,0,0,.08);border:1px solid #eaf4f4}
+  .card h3{margin:.2rem 0 .4rem;font-size:18px}
+  .muted{color:var(--muted);font-size:14px}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}
+  .tab{padding:8px 12px;border-radius:999px;border:1px solid #dbeeee;background:#fff;color:#074}
+  .tab.active{background:var(--lime);color:#1b3500;border-color:transparent}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:860px){.hero{grid-template-columns:1fr}}
+  .pill{display:inline-block;background:#eef9f9;border:1px solid #dbeeee;border-radius:999px;padding:4px 10px;font-size:12px;margin-right:6px}
+  .list{margin:8px 0;padding-left:18px}
+  .list li{margin:6px 0}
+  .hidden{display:none}
+  .table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden}
+  .table th,.table td{padding:10px;border-bottom:1px solid #eef5f5;text-align:left}
+  .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid #e5f2f2}
+  .good{color:#0b6}
+  .danger{color:#b30}
+  .copy{font-size:12px;border:1px dashed #bde;border-radius:10px;padding:6px 10px;background:#f8fdff}
+  .small{font-size:12px}
+  /* Modal */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+  .modal.open{display:flex}
+  .modal .content{max-width:680px;background:#fff;border-radius:20px;padding:18px;box-shadow:0 24px 70px rgba(0,0,0,.35)}
+  /* Confetti canvas */
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:60}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<header>
+  <div class="wrap top">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <h1>Grow & Glow English Adventure — Year 5 🇲🇾</h1>
+    </div>
+    <nav>
+      <button class="btn-light" data-goto="home">Home</button>
+      <button class="btn-lime" data-goto="read">📖 Read Along</button>
+      <button class="btn-pink" data-goto="games">🎮 Game Galaxy</button>
+      <button class="btn-yellow" data-goto="missions">✍️ Magic Write Missions</button>
+      <button class="btn" data-goto="journal">🏅 My Journal</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- HOME -->
+  <section id="home" class="section active">
+    <div class="hero">
+      <div>
+        <h2>Welcome to Grow & Glow! 🦜</h2>
+        <p>Read, play, and write your way to English mastery — with colourful fun, badges, and confetti!</p>
+        <div class="tabs" style="margin-top:8px">
+          <span class="pill">CEFR A1</span>
+          <span class="pill">Year 5 (Malaysia)</span>
+          <span class="pill">Games • Writing • Reflection</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+          <button class="btn-lime" data-goto="read">Start Reading 📖</button>
+          <button class="btn-pink" data-goto="games">Play Games 🎮</button>
+          <button class="btn-yellow" data-goto="missions">Write with Magic ✍️</button>
+          <button class="btn" onclick="confettiBurst()">Celebrate 🎊</button>
+        </div>
+        <p class="muted small" style="margin-top:10px">Tip: This site is best embedded in Canva via <strong>Apps → Embed</strong>.</p>
+      </div>
+      <div class="card">
+        <h3>Quick Links</h3>
+        <ul class="list">
+          <li><strong>Read Along Zone</strong>: 6 short passages with audio + MCQs</li>
+          <li><strong>Game Galaxy</strong>: 50 vocabulary & grammar games across 6 topics</li>
+          <li><strong>Magic Write Missions</strong>: 6 weeks × 3 levels (Low/Mid/High A1)</li>
+          <li><strong>My Journal</strong>: progress, badges, reflection</li>
+        </ul>
+        <div class="muted small">Mascot: <strong>Lexi the Parrot</strong> says, “You’re flying higher each week!”</div>
+      </div>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Why “Read Along” here?</h3>
+        <p class="muted">Some schools block external sites. We include built-in passages and <strong>text-to-speech</strong> so all students can listen and practise safely.</p>
+      </div>
+      <div class="card">
+        <h3>Create Your Own Game</h3>
+        <p class="muted">Students can type a simple prompt and the site builds a mini game card instantly.</p>
+      </div>
+      <div class="card">
+        <h3>Aligned to DSKP</h3>
+        <p class="muted">Tasks match Year 5 CEFR A1 learning outcomes: familiar topics, simple sentences, basic connectors.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- READ ALONG -->
+  <section id="read" class="section">
+    <div class="hero">
+      <div>
+        <h2>Read Along Zone 📖</h2>
+        <p class="muted">Listen with text-to-speech, then answer two quick questions. Practise reading aloud!</p>
+      </div>
+      <div>
+        <div class="badge"><span>🎧</span><span>Built-in audio (no blocked links)</span></div>
+      </div>
+    </div>
+    <div id="readCards" class="cards"></div>
+  </section>
+
+  <!-- GAMES -->
+  <section id="games" class="section">
+    <div class="hero">
+      <div>
+        <h2>Game Galaxy 🎮</h2>
+        <p class="muted">50 vocabulary + grammar games to help with sentence writing across 6 topics.</p>
+      </div>
+      <div>
+        <div class="badge"><span>⭐</span><span>Earn badges by completing games</span></div>
+      </div>
+    </div>
+
+    <div class="tabs" id="gameTopicTabs"></div>
+    <div id="gameCards" class="cards"></div>
+
+    <div class="card" style="margin-top:14px">
+      <h3>🎲 Create Your Own Game</h3>
+      <p class="muted small">Type a prompt. Example: <em>“Make a word matching game for the topic ‘Sports’ with 10 questions.”</em></p>
+      <div class="grid-2">
+        <input id="customGamePrompt" placeholder="Describe your game idea..." style="padding:10px;border-radius:12px;border:1px solid #d8ecec">
+        <div style="display:flex;gap:8px;align-items:center">
+          <select id="customGameTopic" style="padding:10px;border-radius:12px;border:1px solid #d8ecec"></select>
+          <button class="btn" onclick="addCustomGame()">Generate Game Card</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSIONS -->
+  <section id="missions" class="section">
+    <div class="hero">
+      <div>
+        <h2>Magic Write Missions ✍️</h2>
+        <p class="muted">Choose your level (Low / Mid / High A1), pick a topic, then <strong>copy the prompt</strong> to use in Canva Magic Write.</p>
+      </div>
+      <div>
+        <div class="badge"><span>🪄</span><span>Copy-to-Clipboard prompts</span></div>
+      </div>
+    </div>
+
+    <div class="tabs" id="levelTabs"></div>
+    <div class="tabs" id="missionTopicTabs"></div>
+    <div id="missionCards" class="cards"></div>
+  </section>
+
+  <!-- JOURNAL -->
+  <section id="journal" class="section">
+    <div class="hero">
+      <div>
+        <h2>My English Adventure Journal 🏅</h2>
+        <p class="muted">Track your week, mark what you completed, reflect, and unlock badges. Hit “Celebrate” for confetti!</p>
+        <button class="btn-yellow" onclick="confettiBurst()">Celebrate My Progress 🎊</button>
+      </div>
+      <div>
+        <div class="badge"><span>🌈</span><span>Earn the “English Master” badge by finishing all weeks</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Progress Dashboard</h3>
+      <table class="table" id="progressTable"></table>
+    </div>
+
+    <div class="grid-2" style="margin-top:14px">
+      <div class="card">
+        <h3>Self-Assessment (CEFR A1)</h3>
+        <ul class="list small">
+          <li>🌱 Low A1 — short, simple sentences on familiar topics.</li>
+          <li>🌿 Mid A1 — 4–6 connected sentences with <em>and/but/because</em>.</li>
+          <li>🌳 High A1 — a short story/paragraph with feelings or reasons.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Reflection</h3>
+        <p class="small muted">Write 2–3 sentences: What did I enjoy? New words I learned? One improvement for next time?</p>
+        <textarea id="reflectionBox" rows="4" placeholder="Type your reflection..." style="width:100%;padding:10px;border-radius:12px;border:1px solid #d8ecec"></textarea>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button class="btn" onclick="saveReflection()">Save Reflection</button>
+          <button class="btn-light" onclick="copyReflection()">Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h3>Badges</h3>
+      <div id="badges" class="tabs"></div>
+      <button class="btn-yellow" onclick="checkAllBadges()">Update Badges</button>
+    </div>
+
+    <div class="card small" style="margin-top:14px">
+      <h3>Teacher Zone (optional)</h3>
+      <p class="muted">Focus grammar, vocab, expected output, and assessment notes per week.</p>
+      <div id="teacherTableWrap"></div>
+    </div>
+  </section>
+</main>
+
+<!-- MODAL -->
+<div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="content">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <h3 id="modalTitle" style="margin:0">Game Details</h3>
+      <button class="btn-light" onclick="closeModal()">Close</button>
+    </div>
+    <div id="modalBody" class="muted" style="margin-top:8px"></div>
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button class="btn" onclick="markCompletedFromModal()">Mark Completed ⭐</button>
+      <button class="btn-yellow" onclick="confettiBurst()">Celebrate 🎊</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- Routing ---------- */
+const sections = [...document.querySelectorAll('.section')];
+document.querySelectorAll('[data-goto]').forEach(btn=>{
+  btn.addEventListener('click',()=>show(btn.dataset.goto));
+});
+function show(id){
+  sections.forEach(s=>s.classList.toggle('active', s.id===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------- Data: Topics, Read Passages, Games, Missions ---------- */
+const topics = ["Animals","Celebrations","Food & Health","Sports","Describing People","Camping"];
+const topicIcons = ["🐾","🎉","🍎","⚽","🧍","🏕️"];
+const readPassages = [
+  {t:"Animals", text:"The tiger has orange fur with black stripes. It lives in the jungle. It is strong and fast.", q:[
+    {q:"Where does the tiger live?", a:["In the jungle","In the sea","In the desert"], c:0},
+    {q:"What colour is its fur?", a:["Blue","Orange","White"], c:1}
+  ]},
+  {t:"Celebrations", text:"My family visits grandma during Hari Raya. We wear new clothes and eat sweet cookies together.", q:[
+    {q:"Who do we visit?", a:["Teacher","Grandma","Neighbor"], c:1},
+    {q:"What do we eat?", a:["Sweet cookies","Soup","Noodles"], c:0}
+  ]},
+  {t:"Food & Health", text:"I drink water and eat fruits every day. Apples and bananas help me stay strong and healthy.", q:[
+    {q:"What do I drink?", a:["Juice","Water","Tea"], c:1},
+    {q:"Fruits help me stay…", a:["sleepy","strong","angry"], c:1}
+  ]},
+  {t:"Sports", text:"Our class plays football after school. We run on the field and cheer for our team.", q:[
+    {q:"When do we play?", a:["Before school","After school","At night"], c:1},
+    {q:"Where do we run?", a:["In the hall","On the field","In the library"], c:1}
+  ]},
+  {t:"Describing People", text:"My friend Sara has long black hair and kind eyes. She always helps me with homework.", q:[
+    {q:"What colour is Sara's hair?", a:["Brown","Black","Red"], c:1},
+    {q:"Sara is…", a:["Kind","Angry","Shy"], c:0}
+  ]},
+  {t:"Camping", text:"We put up a tent near the lake. At night, we sit around the fire and tell stories.", q:[
+    {q:"Where is the tent?", a:["Near the lake","On the mountain","In the house"], c:0},
+    {q:"What do we do at night?", a:["Swim","Tell stories","Sleep only"], c:1}
+  ]},
+];
+
+const gamesByTopic = {
+  "Animals":[
+    ["Animal Match Up","Picture Match","Match each animal picture to its name."],
+    ["Sound Guess","Listening Quiz","Hear the sound → Choose which animal makes it."],
+    ["Jungle Sentences","Sentence Builder","Arrange: (lion / lives / in / the / jungle)."],
+    ["Who Am I?","Riddle Game","“I am big and grey with a trunk.” → Type animal name."],
+    ["Animal Adjectives","Drag & Drop","Match adjectives (brave, slow, tall) to animals."],
+    ["Plural Zoo","Word Sort","Put animals into singular or plural cages."],
+    ["Article Hunt","Grammar Fix","Choose a/an/the: “I see ___ elephant.”"],
+    ["Pet Diary","Writing Mini-Task","Write 3 sentences about your pet using verbs and adjectives."]
+  ],
+  "Celebrations":[
+    ["Festival Scramble","Word Unscramble","Unscramble: ridaya → Hari Raya."],
+    ["Emoji Party","Matching","Match emojis 🎆🎂🎁 to the festival."],
+    ["What Do We Do?","Verb Choice","Choose correct verb: “We ___ lanterns at Mid-Autumn.”"],
+    ["Decorate It!","Word Fill","Fill sentences: “We put ____ on the table.”"],
+    ["Holiday Adjectives","Adjective Bingo","Click words that describe celebrations."],
+    ["Pronoun Fix","Grammar Fix","Choose correct: “___ go to grandma’s house.” (We/Us)"],
+    ["Sequence the Day","Ordering","Put pictures in order of festival day."],
+    ["Family Card Maker","Creative","Write a short greeting card to family."]
+  ],
+  "Food & Health":[
+    ["Healthy or Not","Sorting","Drag foods to “Healthy” or “Unhealthy.”"],
+    ["Food Rhyme Time","Sound Game","Find words that rhyme with “cake” or “rice.”"],
+    ["Sentence Chef","Sentence Builder","Make a recipe sentence: “I need ___ and ___.”"],
+    ["Verb Kitchen","Verb Tense","Fix: “She (eat/eats) vegetables daily.”"],
+    ["Food Pyramid Sort","Categorise","Place foods into correct groups."],
+    ["Word Race","Speed Quiz","Type as many healthy foods as you can in 30 s."],
+    ["Chef’s Adjectives","Describe It","Add adjectives: “This soup is ___.”"],
+    ["Healthy Diary","Writing Mini-Task","Write 3 sentences about your healthy meals."]
+  ],
+  "Sports":[
+    ["Sport Icons","Picture Match","Match sport icons 🏸🏊🏃 with names."],
+    ["Action Verbs","Verb Choice","Choose verb for each sport: (kick, throw, run)."],
+    ["Equipment Quest","Match Up","Find items used in each sport."],
+    ["Preposition Play","Grammar Maze","Fill: “The ball is ___ the goal.”"],
+    ["Tense Trainer","Tense Quiz","Choose past/present: “We played/play badminton yesterday.”"],
+    ["Cheer Chant","Sentence Maker","Write 3 motivational cheers using verbs."],
+    ["Emoji Code Race","Decode","🏃+🥇 = “I run fast and win!”"],
+    ["Sport Report","Writing Mini-Task","Write a short report about Sports Day."]
+  ],
+  "Describing People":[
+    ["Adjective Bingo","Bingo","Click all adjectives that describe people."],
+    ["Hair & Eyes Match","Picture Match","Match descriptions to faces."],
+    ["Sentence Swap","Grammar Fix","Fix: “She hair has long.” → “She has long hair.”"],
+    ["Comparing Buddies","Comparison","Choose correct: “Ali is (taller/tallest) than Amin.”"],
+    ["Guess Who","Clue Game","“I am short and wear glasses.” → Guess the person."],
+    ["Pronoun Picker","Quiz","Choose correct pronoun: He / She / They."],
+    ["Descriptive Spinner","Prompt","Spin 3 adjectives → Write a sentence."],
+    ["Character Card","Creative","Create a character profile with 5 traits."],
+    ["Best Friend Note","Writing Mini-Task","Write 5 sentences to describe your best friend."]
+  ],
+  "Camping":[
+    ["Camping Items Hunt","Picture Search","Find and label camping items."],
+    ["Verb Tents","Verb Sort","Sort verbs into past and present."],
+    ["Preposition Trail","Maze","“The torch is ___ the tent.”"],
+    ["Sentence Repair","Error Fix","Fix: “We go to camp last night.”"],
+    ["Camping Story Cards","Story Builder","Rearrange sentences to form a story."],
+    ["Weather Words","Vocab Quiz","Match weather words (sunny, rainy, windy)."],
+    ["Safety Signs","True/False","“Never touch fire.” — True or False?"],
+    ["Packing List Maker","Creative","Type 10 things to bring to camp."],
+    ["Camping Diary","Writing Mini-Task","Write a short diary about your camping day."]
+  ]
+};
+
+const levels = [
+  {key:"Low A1", icon:"🌱", tasks:{
+    "Animals":["Learn it: tiger, elephant, tail, fur; model: “A tiger has stripes.”","Try it: Write 3 sentences to describe your favourite animal.","Glow it: Add adjectives (cute, strong, fast)."],
+    "Celebrations":["Learn it: cake, family, lights, song.","Try it: 3 sentences about your favourite festival.","Glow it: Add “happy/colourful/fun”."],
+    "Food & Health":["Learn it: rice, fish, apple, water.","Try it: 3 sentences on foods you like/dislike.","Glow it: Add “because” (…because it is sweet)."],
+    "Sports":["Learn it: football, run, jump, team.","Try it: 3 sentences about your favourite sport.","Glow it: Add frequency (always/often/sometimes)."],
+    "Describing People":["Learn it: tall, short, kind, funny, friendly.","Try it: 3 sentences describing a friend.","Glow it: Add colours/clothes/hair."],
+    "Camping":["Learn it: tent, torch, lake, fire.","Try it: 3 sentences about things you bring.","Glow it: Add “I like… / I can…”."]
+  }},
+  {key:"Mid A1", icon:"🌿", tasks:{
+    "Animals":["Learn it: feed, wash, play; daily routine verbs.","Try it: 5 sentences about caring for a pet.","Glow it: Add linking words (and, then, because)."],
+    "Celebrations":["Learn it: first, then, next, finally.","Try it: 5 sentences on how your family celebrates.","Glow it: Add connectors to improve flow."],
+    "Food & Health":["Learn it: eat, drink, sleep, exercise.","Try it: 5 sentences on healthy habits.","Glow it: Add advice: “You should…”"],
+    "Sports":["Learn it: past tense (played, ran, won).","Try it: 5 sentences on Sports Day.","Glow it: Add feelings + adjectives."],
+    "Describing People":["Learn it: his/her/their (possessive).","Try it: 5 sentences about a teacher.","Glow it: Add “and/but/because”."],
+    "Camping":["Learn it: first/then/next/finally.","Try it: 5 sentences from morning to night.","Glow it: Make sentences smoother with links."]
+  }},
+  {key:"High A1", icon:"🌳", tasks:{
+    "Animals":["Learn it: story openers (One day…/Suddenly…).","Try it: 6–8 sentence short jungle story.","Glow it: Add sensory details (see/hear/feel)."],
+    "Celebrations":["Learn it: reasons & meaning.","Try it: a paragraph on a festival & why it’s special.","Glow it: Add cultural details & emotions."],
+    "Food & Health":["Learn it: opinion phrases (In my opinion/I believe).","Try it: paragraph with tips for a healthy life.","Glow it: Add an example + a reason."],
+    "Sports":["Learn it: describe people (My hero is…).","Try it: paragraph about your favourite athlete.","Glow it: Add personality adjectives."],
+    "Describing People":["Learn it: personality + action.","Try it: describe a family member (looks + special).","Glow it: Add a compliment + mini moment."],
+    "Camping":["Learn it: diary format (Dear Diary…).","Try it: 6–8 sentence camping diary.","Glow it: Add emotions + weather details."]
+  }}
+];
+
+/* ---------- UI Builders ---------- */
+// Read Along
+const readWrap = document.getElementById('readCards');
+readPassages.forEach((p,idx)=>{
+  const c=document.createElement('div'); c.className='card';
+  c.innerHTML=`
+    <h3>${topicIcons[idx]} ${p.t}</h3>
+    <p>${p.text}</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0">
+      <button class="btn-lime" onclick="tts('${p.text.replace(/'/g,"\'")}')">🔊 Play Audio</button>
+      <button class="btn-light" onclick="confettiBurst()">I read it!</button>
+    </div>
+    <div class="small">
+      <strong>Quick Check:</strong>
+      ${p.q.map((qq,i)=>`
+        <div style="margin:8px 0">
+          <div>${i+1}. ${qq.q}</div>
+          ${qq.a.map((a,j)=>`
+            <label style="display:inline-block;margin:4px 8px 0 0">
+              <input type="radio" name="q${idx}_${i}" onchange="checkMCQ(this,${qq.c},${j})"> ${a}
+            </label>
+          `).join('')}
+          <span id="qfb_${idx}_${i}" class="small"></span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  readWrap.appendChild(c);
+});
+function checkMCQ(input,correct,chosen){
+  const id = input.name.split('q')[1];
+  const fb = document.getElementById(`qfb_${id.replace('_','_')}`);
+  if(chosen===correct){ fb.textContent=' ✅ Correct!'; fb.className='small good'; confettiBurst(60); }
+  else { fb.textContent=' ❌ Try again'; fb.className='small danger'; }
+}
+function tts(text){
+  if(!('speechSynthesis' in window)) return alert('Text-to-speech not supported in this browser.');
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=1; u.pitch=1;
+  speechSynthesis.cancel(); speechSynthesis.speak(u);
+}
+
+// Games
+const topicTabs = document.getElementById('gameTopicTabs');
+const gameCards = document.getElementById('gameCards');
+const topicSelect = document.getElementById('customGameTopic');
+topics.forEach((t,i)=>{
+  const b=document.createElement('button'); b.className='tab'; b.textContent=`${topicIcons[i]} ${t}`;
+  b.addEventListener('click',()=>selectGameTopic(t,b));
+  topicTabs.appendChild(b);
+  const opt=document.createElement('option'); opt.value=t; opt.textContent=t; topicSelect.appendChild(opt);
+});
+let currentGameTopic = topics[0];
+topicTabs.firstChild.classList.add('active');
+renderGames(currentGameTopic);
+
+function selectGameTopic(name,btn){
+  currentGameTopic=name;
+  [...topicTabs.children].forEach(ch=>ch.classList.toggle('active',ch===btn));
+  renderGames(name);
+}
+function renderGames(topic){
+  gameCards.innerHTML='';
+  (gamesByTopic[topic]||[]).forEach((g,idx)=>{
+    const card=document.createElement('div'); card.className='card';
+    card.innerHTML = `
+      <h3>${idx+1}. ${g[0]}</h3>
+      <div class="muted small">${g[1]}</div>
+      <p class="small" style="margin-top:6px">${g[2]}</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+        <button class="btn" onclick="openGame('${topic}','${g[0]}','${g[1]}','${g[2].replace(/'/g,"\'")}')">Play Now</button>
+        <button class="btn-light" onclick="markCompleted('${topic}','${g[0]}')">Mark Completed ⭐</button>
+      </div>
+    `;
+    gameCards.appendChild(card);
+  });
+}
+function addCustomGame(){
+  const prompt = document.getElementById('customGamePrompt').value.trim();
+  const topic = document.getElementById('customGameTopic').value;
+  if(!prompt) return alert('Please type a prompt.');
+  const g = ["Custom Game", "Generated", prompt];
+  gamesByTopic[topic].push(g);
+  if(topic===currentGameTopic) renderGames(topic);
+  document.getElementById('customGamePrompt').value='';
+  confettiBurst(80);
+}
+
+// Modal for a game (simple playable text action)
+const modal = document.getElementById('modal');
+const modalTitle = document.getElementById('modalTitle');
+const modalBody = document.getElementById('modalBody');
+let modalGameRef = null;
+function openGame(topic,name,type,inst){
+  modalGameRef = {topic,name};
+  modalTitle.textContent = `${name} — ${topic}`;
+  modalBody.innerHTML = `
+    <p><strong>Type:</strong> ${type}</p>
+    <p><strong>Instructions:</strong> ${inst}</p>
+    <div class="small copy">Teacher tip: turn this into a timed challenge (60s) and ask students to write 2 sentences using new words.</div>
+  `;
+  modal.classList.add('open');
+}
+function closeModal(){ modal.classList.remove('open'); }
+function markCompletedFromModal(){ if(modalGameRef){ markCompleted(modalGameRef.topic, modalGameRef.name); } }
+
+// Missions (Levels + Topics)
+const levelTabs = document.getElementById('levelTabs');
+const missionTopicTabs = document.getElementById('missionTopicTabs');
+const missionCards = document.getElementById('missionCards');
+let currentLevel = levels[0];
+let currentMissionTopic = topics[0];
+
+levels.forEach((lv,i)=>{
+  const b=document.createElement('button'); b.className='tab'; b.textContent=`${lv.icon} ${lv.key}`;
+  if(i===0) b.classList.add('active');
+  b.addEventListener('click',()=>{ currentLevel=lv; updateLevelTabs(b); renderMissionCards(); });
+  levelTabs.appendChild(b);
+});
+function updateLevelTabs(active){ [...levelTabs.children].forEach(ch=>ch.classList.toggle('active',ch===active)); }
+
+topics.forEach((t,i)=>{
+  const b=document.createElement('button'); b.className='tab'; b.textContent=`${topicIcons[i]} ${t}`;
+  if(i===0) b.classList.add('active');
+  b.addEventListener('click',()=>{ currentMissionTopic=t; updateMissionTopicTabs(b); renderMissionCards(); });
+  missionTopicTabs.appendChild(b);
+});
+function updateMissionTopicTabs(active){ [...missionTopicTabs.children].forEach(ch=>ch.classList.toggle('active',ch===active)); }
+
+function renderMissionCards(){
+  missionCards.innerHTML='';
+  const t = currentMissionTopic;
+  const trio = currentLevel.tasks[t]; // [Learn, Try, Glow]
+  const [learn, tryit, glow] = trio || ["—","—","—"];
+  const card=document.createElement('div'); card.className='card';
+  card.innerHTML = `
+    <h3>${currentLevel.icon} ${currentLevel.key} — ${t}</h3>
+    <div class="grid-2">
+      <div class="card">
+        <h3>📚 Learn it</h3>
+        <p class="small">${learn}</p>
+      </div>
+      <div class="card">
+        <h3>✏️ Try it</h3>
+        <p class="small">${tryit}</p>
+        <textarea id="missionInput" rows="5" placeholder="Write here..." style="width:100%;padding:10px;border-radius:12px;border:1px solid #d8ecec"></textarea>
+      </div>
+    </div>
+    <div class="card" style="margin-top:10px">
+      <h3>💡 Glow it (Magic Write)</h3>
+      <p class="small">Click to copy a ready prompt. Paste it into <strong>Canva Magic Write</strong> to improve your writing.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-light" onclick="copyPrompt('${'.join([]) + '}')"></button>
+      </div>
+    </div>
+    <div style="margin-top:10px">
+      <button class="btn" onclick="markWritingCompleted('${t}','${currentLevel.key}')">Mark Writing Completed ⭐</button>
+    </div>
+  `;
+  missionCards.appendChild(card);
+}
+function makePrompt(topic,level,goal){
+  return `You are helping a Year 5 Malaysian student (CEFR A1). Topic: ${topic}. Level: ${level}. ${goal} Keep sentences short, simple, friendly.`;
+}
+function escapeForAttr(s){ return s.replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll("'","&#39;"); }
+function copyPrompt(text){
+  navigator.clipboard.writeText(text);
+  confettiBurst(40);
+}
+renderMissionCards();
+
+/* ---------- Progress / Badges ---------- */
+const progressTable = document.getElementById('progressTable');
+const progress = {
+  weeks: topics.map(t=>({topic:t, games:0, writing:{'Low A1':false,'Mid A1':false,'High A1':false}})),
+  reflections: ''
+};
+function renderProgress(){
+  progressTable.innerHTML = `
+    <tr><th>Week</th><th>Topic</th><th>Games Completed</th><th>Writing Level</th><th>Badge</th></tr>
+    ${progress.weeks.map((w,i)=>`
+      <tr>
+        <td>${i+1}</td>
+        <td>${topicIcons[i]} ${w.topic}</td>
+        <td>${w.games} / ${gamesByTopic[w.topic].length}</td>
+        <td class="small">
+          ${['Low A1','Mid A1','High A1'].map(l=>
+            `<label style="margin-right:8px">
+              <input type="checkbox" ${w.writing[l]?'checked':''} onchange="toggleWriting(${i},'${l}',this.checked)"> ${l}
+            </label>`).join('')}
+        </td>
+        <td id="badge_${i}" class="small">—</td>
+      </tr>
+    `).join('')}
+  `;
+}
+function toggleWriting(idx,level,checked){ progress.weeks[idx].writing[level]=checked; }
+function markCompleted(topic,name){
+  const idx = topics.indexOf(topic);
+  if(idx>=0){ progress.weeks[idx].games = Math.min(progress.weeks[idx].games+1, gamesByTopic[topic].length); }
+  renderProgress(); confettiBurst(30);
+}
+function markWritingCompleted(topic,level){
+  const idx = topics.indexOf(topic);
+  if(idx>=0){ progress.weeks[idx].writing[level]=true; renderProgress(); confettiBurst(40); }
+}
+function saveReflection(){ progress.reflections = document.getElementById('reflectionBox').value.trim(); confettiBurst(25); }
+function copyReflection(){ navigator.clipboard.writeText(document.getElementById('reflectionBox').value||''); }
+renderProgress();
+
+// Badges
+const badgeNames = [
+  "🐾 Animal Explorer","🎉 Festival Friend","🍎 Healthy Hero","⚽ Sport Star","🧍 Super Friend","🏕️ Camp Champion","🌈 English Master"
+];
+const badgesWrap = document.getElementById('badges');
+badgeNames.forEach(b=>{
+  const t=document.createElement('span'); t.className='badge'; t.textContent=b; badgesWrap.appendChild(t);
+});
+function checkAllBadges(){
+  topics.forEach((t,i)=>{
+    const doneGames = progress.weeks[i].games >= gamesByTopic[t].length;
+    const doneWriting = Object.values(progress.weeks[i].writing).some(Boolean);
+    const cell = document.getElementById(`badge_${i}`);
+    if(doneGames && doneWriting){
+      cell.textContent = [
+        "🐾 Animal Explorer","🎉 Festival Friend","🍎 Healthy Hero","⚽ Sport Star","🧍 Super Friend","🏕️ Camp Champion"
+      ][i];
+    } else { cell.textContent='—'; }
+  });
+  const allDone = progress.weeks.every((w,i)=> w.games>=gamesByTopic[topics[i]].length && Object.values(w.writing).some(Boolean));
+  if(allDone){ confettiBurst(150); alert('Unlocked 🌈 English Master!'); }
+}
+
+/* ---------- Teacher Table ---------- */
+const teacherTableWrap = document.getElementById('teacherTableWrap');
+const teacherMeta = [
+  ["Animals","to be; have/has","tiger, elephant, fur, tail","3–8 sentences describing animals","Check adjectives & punctuation"],
+  ["Celebrations","Pronouns; verbs","celebrate, family, lights","Sequence of celebration (4–6)","Check connectors (first/then/next)"],
+  ["Food & Health","Present simple; advice","eat, drink, exercise","Healthy habits paragraph","Check reasons (because)"],
+  ["Sports","Past vs present","run, play, win, cheer","Sports Day recount","Check tense consistency"],
+  ["Describing People","Adjectives; comparatives","tall, short, kind","Describe a person","Check order: has/have + noun"],
+  ["Camping","Prepositions; past","tent, torch, lake","Diary / recount (6–8)","Check time words & safety vocab"]
+];
+teacherTableWrap.innerHTML = `
+  <table class="table">
+    <tr><th>Week</th><th>Focus Grammar</th><th>Vocab Set</th><th>Expected Output</th><th>Assessment Note</th></tr>
+    ${teacherMeta.map((r,i)=>`<tr>
+      <td>${i+1}. ${topicIcons[i]} ${r[0]}</td>
+      <td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td>
+    </tr>`).join('')}
+  </table>
+`;
+
+/* ---------- Modal helpers ---------- */
+function markCompletedFromButton(topic,name){ markCompleted(topic,name); }
+function markCompletedFromCard(t,i){ markCompleted(t, gamesByTopic[t][i][0]); }
+
+/* ---------- Confetti ---------- */
+const confettiCanvas = document.getElementById('confetti');
+const ctx = confettiCanvas.getContext('2d');
+let pieces = []; let confettiTimer=null;
+function resizeCanvas(){ confettiCanvas.width = innerWidth; confettiCanvas.height = innerHeight; }
+window.addEventListener('resize', resizeCanvas); resizeCanvas();
+function confettiBurst(amount=80){
+  const colors = [getCSS('--turquoise'),getCSS('--lime'),getCSS('--pink'),getCSS('--yellow')];
+  for(let i=0;i<amount;i++){
+    pieces.push({
+      x: Math.random()*confettiCanvas.width,
+      y: -10,
+      s: Math.random()*6+4,
+      a: Math.random()*Math.PI*2,
+      v: Math.random()*2+2,
+      r: (Math.random()-0.5)*0.2,
+      c: colors[Math.floor(Math.random()*colors.length)]
+    });
+  }
+  if(!confettiTimer){ loopConfetti(); }
+}
+function loopConfetti(){
+  confettiTimer = requestAnimationFrame(loopConfetti);
+  ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+  pieces.forEach(p=>{
+    p.y += p.v; p.a += p.r;
+    ctx.save();
+    ctx.translate(p.x,p.y);
+    ctx.rotate(p.a);
+    ctx.fillStyle = p.c;
+    ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s);
+    ctx.restore();
+  });
+  pieces = pieces.filter(p=>p.y<confettiCanvas.height+20);
+  if(pieces.length===0){ cancelAnimationFrame(confettiTimer); confettiTimer=null; }
+}
+function getCSS(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+</script>
+</body>
+</html>
